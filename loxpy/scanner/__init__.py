@@ -85,10 +85,14 @@ class Scanner:
             )
 
         elif c == "/":
+            # Single Line Comment
             if self.match("/"):
                 # Keep advancing until new line for comment character found
                 while self.peek() != '\n' and not self.is_at_end():
                     self.advance()
+            # Multi-line comment
+            elif self.match("*"):
+                self.skip_multiline_comment()
             else:
                 self.add_token(TokenType.DIVIDE)
 
@@ -178,6 +182,25 @@ class Scanner:
             token_type = KEYWORD_MAP[text]
 
         self.add_token(token_type)
+
+    def skip_multiline_comment(self):
+        # consume *
+        self.advance()
+
+        while True:
+            if self.is_at_end():
+                self.lox.error(self.line, "Unterminated end of multi-line comment.")
+                return
+            
+            c = self.advance()
+
+            if c == "\n":
+                self.line += 1
+            elif c == "*" and self.match("/"):
+                return
+            elif c == "/" and self.peek() == "*":
+                self.skip_multiline_comment()
+
 
     def add_token(self, token_type, literal=None):
         text = self.source[self.start:self.current]

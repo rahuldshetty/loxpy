@@ -1,0 +1,13 @@
+/* this 
+is a 
+ /* 
+    another one
+    over here
+ */
+
+multi line comment
+*/
+
+
+var a = 100;
+a = a + 4;
