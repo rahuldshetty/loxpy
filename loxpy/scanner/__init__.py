@@ -31,6 +31,9 @@ class Scanner:
     
     def is_at_end(self):
         return self.current >= len(self.source)
+    
+    def is_digit(self, c):
+        return c >= '0' and c <= '9'
 
     def scan_token(self):
         c = self.advance()
@@ -95,8 +98,13 @@ class Scanner:
             self.match_string()
 
         else:
+            # Parse number literals if
+            if self.is_digit(c):
+                self.match_number()
+
             # Unexpected character presented to lexer
-            self.lox.error(self.line, "Unexpected character '" + c + "' found.")
+            else:
+                self.lox.error(self.line, "Unexpected character '" + c + "' found.")
 
     def advance(self):
         current_char = self.source[self.current]
@@ -107,6 +115,11 @@ class Scanner:
         if self.is_at_end():
             return '\0'
         return self.source[self.current]
+
+    def peek_next(self):
+        if self.current + 1 >= len(self.source):
+            return '\0'
+        return self.source[self.current + 1]
 
     def match(self, expected):
         if self.is_at_end():
@@ -131,6 +144,19 @@ class Scanner:
 
         value = self.source[self.start + 1: self.current - 1]
         self.add_token(TokenType.STRING, value)
+
+    def match_number(self):
+        while self.is_digit(self.peek()):
+            self.advance()
+
+        # Support fractional part
+        if self.peek() == "." and self.is_digit(self.peek_next()):
+            self.advance()
+
+            while self.is_digit(self.peek()):
+                self.advance()
+
+        self.add_token(TokenType.NUMBER, float(self.source[self.start:self.current]))
 
     def add_token(self, token_type, literal=None):
         text = self.source[self.start:self.current]
