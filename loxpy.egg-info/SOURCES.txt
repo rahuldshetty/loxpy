@@ -1,6 +1,0 @@
-setup.py
-loxpy.egg-info/PKG-INFO
-loxpy.egg-info/SOURCES.txt
-loxpy.egg-info/dependency_links.txt
-loxpy.egg-info/entry_points.txt
-loxpy.egg-info/top_level.txt

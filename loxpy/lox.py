@@ -4,22 +4,27 @@ from loxpy.scanner import Scanner
 from . import __VERSION__
 
 class Lox:
+    hasError = False
+
     def __init__(self):
-        self.hasError = False
+        pass
+    
+    @staticmethod
+    def error(line, message):
+        Lox.report(line, "", message)
 
-    def error(self, line, message):
-        self.report(line, "", message)
-
-    def report(self, line, where, message):
+    @staticmethod
+    def report(line, where, message):
         sys.stderr.write(f"[line {line}] Error {where} : {message}")
         sys.stderr.flush()
-        self.hasError = True
+        Lox.hasError = True
 
     def run(self, source):
-        scanner = Scanner(source)
+        scanner = Scanner(source, self)
         tokens = scanner.scan_tokens()
         for token in tokens:
-            sys.stdout.write(token)
+            sys.stdout.write(str(token))
+            sys.stdout.write("\n")
             sys.stdout.flush()
     
     def run_file(self, script):
@@ -28,7 +33,7 @@ class Lox:
             script_data = fh.read()
             fh.close()
             self.run(script_data)
-            if self.hasError:
+            if Lox.hasError:
                 sys.exit(65)
         except FileNotFoundError:
             sys.exit(1)
@@ -41,7 +46,7 @@ class Lox:
             try:
                 line = input('> ')
                 self.run(line)
-                self.hasError = False
+                Lox.hasError = False
             except EOFError:
                 break   
 

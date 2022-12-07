@@ -1,3 +1,0 @@
-[console_scripts]
-loxpy = __main__:main
-
