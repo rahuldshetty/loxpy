@@ -52,3 +52,30 @@ class TokenType(Enum):
     WHILE = auto()
 
     EOF = auto()
+
+
+# Keyword Map
+KEYWORD_MAP = {
+    "and": TokenType.AND,
+    "or": TokenType.OR,
+
+    "class": TokenType.CLASS,
+
+    "null": TokenType.NULL,
+    "true": TokenType.TRUE,
+    "false": TokenType.FALSE,
+
+    "if": TokenType.IF,
+    "else": TokenType.ELSE,
+    "fn": TokenType.FUNCTION,
+    "for": TokenType.FOR,
+
+    "print": TokenType.PRINT,
+    "return": TokenType.RETURN,
+    "super": TokenType.SUPER,
+    "this": TokenType.THIS,
+    "var": TokenType.VAR,
+    "while": TokenType.WHILE,
+
+    
+}

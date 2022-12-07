@@ -1,4 +1,4 @@
-from loxpy.token.token_types import TokenType
+from loxpy.token.token_types import TokenType, KEYWORD_MAP
 from loxpy.token import Token
 
 class Scanner:
@@ -34,6 +34,12 @@ class Scanner:
     
     def is_digit(self, c):
         return c >= '0' and c <= '9'
+
+    def is_alpha(self, c):
+        return (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c == '_')
+
+    def is_alphanumeric(self, c):
+        return self.is_alpha(c) or self.is_digit(c)
 
     def scan_token(self):
         c = self.advance()
@@ -98,9 +104,13 @@ class Scanner:
             self.match_string()
 
         else:
-            # Parse number literals if
+            # Parse number literals 
             if self.is_digit(c):
                 self.match_number()
+            
+            # Start matching alphabet_underscore to identifer
+            elif self.is_alpha(c):
+                self.match_identifer()
 
             # Unexpected character presented to lexer
             else:
@@ -157,6 +167,17 @@ class Scanner:
                 self.advance()
 
         self.add_token(TokenType.NUMBER, float(self.source[self.start:self.current]))
+
+    def match_identifer(self):
+        while self.is_alphanumeric(self.peek()):
+            self.advance()
+
+        text = self.source[self.start:self.current]
+        token_type = TokenType.IDENTIFIER
+        if text in KEYWORD_MAP:
+            token_type = KEYWORD_MAP[text]
+
+        self.add_token(token_type)
 
     def add_token(self, token_type, literal=None):
         text = self.source[self.start:self.current]
