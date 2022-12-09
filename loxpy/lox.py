@@ -4,10 +4,13 @@ import sys
 
 from loxpy.scanner import Scanner
 from loxpy.parser import Parser
+from loxpy.evaluator import Interpreter
+from loxpy.evaluator.runtime_error import LoxPyRuntimeError
 from loxpy.parser.ast_printer import AstPrinter
 
 class Lox:
     hasError = False
+    hasRuntimeError = False
 
     def __init__(self):
         pass
@@ -17,8 +20,12 @@ class Lox:
         Lox.report(line, "", message)
 
     @staticmethod
+    def runtime_error(error:LoxPyRuntimeError):
+        Lox.report(error.token.line, "", str(error))
+
+    @staticmethod
     def report(line, where, message):
-        sys.stderr.write(f"[line {line}] Error {where} : {message}")
+        sys.stderr.write(f"[line {line}] Error {where}: {message}\n")
         sys.stderr.flush()
         Lox.hasError = True
 
@@ -29,10 +36,14 @@ class Lox:
         parser = Parser(tokens, self)
         expression = parser.parse()
 
+        interpreter = Interpreter(self)
+
         if self.hasError:
             return
         
-        print(AstPrinter().print(expression))
+        interpreter.interpret(expression)
+
+        # print(AstPrinter().print(expression))
     
     def run_file(self, script):
         try:
@@ -42,6 +53,8 @@ class Lox:
             self.run(script_data)
             if Lox.hasError:
                 sys.exit(65)
+            if Lox.hasRuntimeError:
+                sys.exit(70)
         except FileNotFoundError:
             sys.exit(1)
         
