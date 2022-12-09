@@ -1,7 +1,10 @@
+from . import __VERSION__
+
 import sys
 
 from loxpy.scanner import Scanner
-from . import __VERSION__
+from loxpy.parser import Parser
+from loxpy.parser.ast_printer import AstPrinter
 
 class Lox:
     hasError = False
@@ -22,10 +25,14 @@ class Lox:
     def run(self, source):
         scanner = Scanner(source, self)
         tokens = scanner.scan_tokens()
-        for token in tokens:
-            sys.stdout.write(str(token))
-            sys.stdout.write("\n")
-            sys.stdout.flush()
+
+        parser = Parser(tokens, self)
+        expression = parser.parse()
+
+        if self.hasError:
+            return
+        
+        print(AstPrinter().print(expression))
     
     def run_file(self, script):
         try:
