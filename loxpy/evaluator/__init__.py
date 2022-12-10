@@ -1,19 +1,26 @@
 from loxpy.parser import expressions
+from loxpy.parser import statements
 from loxpy.token import Token
 from loxpy.token.token_types import TokenType
 
 from loxpy.evaluator.runtime_error import LoxPyRuntimeError, LoxPyDivisionByZeroError
 
-class Interpreter(expressions.ExprVisitor):
+class Interpreter(
+    expressions.ExprVisitor,
+    statements.StmtVisitor
+):
     def __init__(self, lox_main):
         self.lox = lox_main
 
-    def interpret(self, expr:expressions.Expr):
+    def interpret(self, statements):
         try:
-            value = self.evaluate(expr)
-            print(self.stringify(value))
+            for statement in statements:
+                self.execute(statement)
         except LoxPyRuntimeError as error:
             self.lox.runtime_error(error)
+
+    def execute(self, statement:statements.Stmt):
+        statement.accept(self)
 
     def stringify(self, value):
         if object == None:
@@ -109,6 +116,14 @@ class Interpreter(expressions.ExprVisitor):
         
         return None
     
+    def visit_expression_stmt(self, expr: statements.Expression):
+        self.evaluate(expr.expression)
+        return None
+    
+    def visit_print_stmt(self, expr: statements.Print):
+        value = self.evaluate(expr.expression)
+        print(self.stringify(value))
+        return None
 
     def check_number_operand(self, operator:Token, operand:object):
         if type(operand) == float:

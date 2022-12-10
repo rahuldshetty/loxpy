@@ -32,6 +32,15 @@ EXPRESSIONS = {
     "Unary": ('operator: Token', 'right: Expr'),
 }
 
+# Statement Import
+
+STATEMENTS_IMPORTS = DEFAULT_IMPORTS + ('from loxpy.parser.expressions import Expr',)
+
+STATEMENTS = {
+    "Expression": ("expression: Expr",),
+    "Print": ("expression: Expr",),
+}
+
 
 def define_imports(file, lines):
     file.write('\n'.join(lines))
@@ -90,6 +99,7 @@ def main():
         arg_parser.error("Output must be a valid directory")
 
     define_ast(path / 'expressions.py', 'Expr', EXPRESSIONS, EXPRESSION_IMPORTS)
+    define_ast(path / 'statements.py', 'Stmt', STATEMENTS, STATEMENTS_IMPORTS)
 
 if __name__ == "__main__":
     main()

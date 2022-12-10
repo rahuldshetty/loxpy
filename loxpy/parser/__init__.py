@@ -4,6 +4,8 @@ Recursive Decent Parser for loxpy
 from loxpy.parser import expressions
 from loxpy.token.token_types import TokenType
 
+from loxpy.parser import statements
+
 class ParserError(Exception):
     pass
 
@@ -15,7 +17,11 @@ class Parser:
     
     def parse(self):
         try:
-            return self.expression()
+            statements = []
+            while not self.is_at_end():
+                statements.append(self.statement())
+
+            return statements
         except ParserError as parse_error:
             return None
 
@@ -44,7 +50,23 @@ class Parser:
             
             self.advance()
 
-    
+    def statement(self):
+        # Print Statement
+        if self.match(TokenType.PRINT):
+            return self.print_statement()
+        
+        return self.expression_statement()
+
+    def print_statement(self):
+        value = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expected ';' after value.")
+        return statements.Print(value)
+
+    def expression_statement(self):
+        expr = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expected ';' after expression.")
+        return statements.Expression(expr)
+
     def expression(self):
         return self.equality()
 

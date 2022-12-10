@@ -34,14 +34,14 @@ class Lox:
         tokens = scanner.scan_tokens()
 
         parser = Parser(tokens, self)
-        expression = parser.parse()
+        statements = parser.parse()
 
         interpreter = Interpreter(self)
 
         if self.hasError:
             return
         
-        interpreter.interpret(expression)
+        interpreter.interpret(statements)
 
         # print(AstPrinter().print(expression))
     
