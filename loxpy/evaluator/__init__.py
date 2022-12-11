@@ -119,6 +119,10 @@ class Interpreter(
         
         return None
     
+
+    def visit_block_stmt(self, expr: statements.Block):
+        self.execute_block(expr.statements, Environment(self.env))
+
     def visit_expression_stmt(self, expr: statements.Expression):
         self.evaluate(expr.expression)
         return None
@@ -156,4 +160,12 @@ class Interpreter(
         if divisor == 0:
             raise LoxPyDivisionByZeroError(operator)
 
+    def execute_block(self, statements, environment:Environment):
+        previous = self.env
+        try:
+            self.env = environment
+            for statement in statements:
+                self.execute(statement)
+        finally:
+            self.env = previous
 

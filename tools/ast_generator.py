@@ -42,6 +42,7 @@ STATEMENTS_IMPORTS = DEFAULT_IMPORTS + (
 )
 
 STATEMENTS = {
+    "Block": ("statements: list",),
     "Expression": ("expression: Expr",),
     "Print": ("expression: Expr",),
     "Var": ("name: Token", "initializer: Expr"),
