@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from loxpy.parser.expressions import Expr
+from loxpy.token import Token
 
 
 class StmtVisitor(ABC):

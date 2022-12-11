@@ -35,7 +35,10 @@ EXPRESSIONS = {
 
 # Statement Import
 
-STATEMENTS_IMPORTS = DEFAULT_IMPORTS + ('from loxpy.parser.expressions import Expr',)
+STATEMENTS_IMPORTS = DEFAULT_IMPORTS + (
+    'from loxpy.parser.expressions import Expr',
+    'from loxpy.token import Token',
+)
 
 STATEMENTS = {
     "Expression": ("expression: Expr",),

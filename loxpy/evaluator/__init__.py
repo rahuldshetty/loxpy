@@ -3,6 +3,8 @@ from loxpy.parser import statements
 from loxpy.token import Token
 from loxpy.token.token_types import TokenType
 
+from loxpy.environment import Environment
+
 from loxpy.evaluator.runtime_error import LoxPyRuntimeError, LoxPyDivisionByZeroError
 
 class Interpreter(
@@ -11,6 +13,7 @@ class Interpreter(
 ):
     def __init__(self, lox_main):
         self.lox = lox_main
+        self.env = Environment()
 
     def interpret(self, statements):
         try:
@@ -124,6 +127,15 @@ class Interpreter(
         value = self.evaluate(expr.expression)
         print(self.stringify(value))
         return None
+
+    def visit_var_stmt(self, stmt: statements.Var):
+        value = None
+        if stmt.initializer != None:
+            value = self.evaluate(stmt.initializer)
+        self.env.define(stmt.name.lexeme, value)
+    
+    def visit_variable_expr(self, expr: expressions.Variable):
+        return self.env.get(expr.name)
 
     def check_number_operand(self, operator:Token, operand:object):
         if type(operand) == float:
