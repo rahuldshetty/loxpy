@@ -30,6 +30,7 @@ EXPRESSIONS = {
     "Grouping": ('expression: Expr',),
     "Literal": ('value: object',),
     "Unary": ('operator: Token', 'right: Expr'),
+    "Variable": ("name: Token",),
 }
 
 # Statement Import
@@ -39,6 +40,7 @@ STATEMENTS_IMPORTS = DEFAULT_IMPORTS + ('from loxpy.parser.expressions import Ex
 STATEMENTS = {
     "Expression": ("expression: Expr",),
     "Print": ("expression: Expr",),
+    "Var": ("name: Token", "initializer: Expr"),
 }
 
 

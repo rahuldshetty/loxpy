@@ -19,7 +19,7 @@ class Parser:
         try:
             statements = []
             while not self.is_at_end():
-                statements.append(self.statement())
+                statements.append(self.declaration())
 
             return statements
         except ParserError as parse_error:
@@ -49,6 +49,14 @@ class Parser:
                 return
             
             self.advance()
+    
+    def declaration(self):
+        try:
+            if self.match(TokenType.VAR):
+                return self.var_declaration()
+            return self.statement()
+        except ParserError as parse_error:
+            self.synchronize()
 
     def statement(self):
         # Print Statement
@@ -56,6 +64,16 @@ class Parser:
             return self.print_statement()
         
         return self.expression_statement()
+
+    def var_declaration(self):
+        name = self.consume(TokenType.IDENTIFIER, "Expected variable name.")
+
+        initializer = None
+        if self.match(TokenType.EQUAL):
+            initializer = self.expression()
+
+        self.consume(TokenType.SEMICOLON, "Expected ';' after variable declaraction.")
+        return statements.Var(name, initializer)        
 
     def print_statement(self):
         value = self.expression()
@@ -127,6 +145,9 @@ class Parser:
         
         if self.match(TokenType.NUMBER, TokenType.STRING):
             return expressions.Literal(self.previous().literal)
+
+        if self.match(TokenType.IDENTIFIER):
+            return expressions.Variable(self.previous())
 
         if self.match(TokenType.LEFT_PARAN):
             expr = self.expression()

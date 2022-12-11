@@ -1,0 +1,1 @@
+python tools/ast_generator.py loxpy/parser
