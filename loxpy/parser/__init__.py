@@ -59,14 +59,33 @@ class Parser:
             self.synchronize()
 
     def statement(self):
+        # If Statement
+        if self.match(TokenType.IF):
+            return self.if_statement()
+
         # Print Statement
         if self.match(TokenType.PRINT):
             return self.print_statement()
 
+        # Block Statement
         if self.match(TokenType.LEFT_BRACE):
             return statements.Block(self.block())
         
         return self.expression_statement()
+
+    def if_statement(self):
+        self.consume(TokenType.LEFT_PARAN, "Expected '(' after 'if'.")
+        condition = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expected ')' after condition.")
+
+        thenBranch = self.statement()
+        
+        elseBranch = None
+        if self.match(TokenType.ELSE):
+            elseBranch = self.statement()
+        
+        return statements.If(condition, thenBranch, elseBranch)
+
 
     def block(self):
         statements = []

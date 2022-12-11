@@ -50,7 +50,7 @@ class Interpreter(
             return False
         if type(object) == bool:
             return object
-        return True
+        return self.evaluate(object)
     
     def is_equal(self, left, right):
         if left == None and right == None:
@@ -119,6 +119,11 @@ class Interpreter(
         
         return None
     
+    def visit_if_stmt(self, expr: statements.If):
+        if self.is_truthy(expr.condition):
+            self.execute(expr.thenBranch)
+        elif expr.elseBranch != None:
+            self.execute(expr.elseBranch)
 
     def visit_block_stmt(self, expr: statements.Block):
         self.execute_block(expr.statements, Environment(self.env))
