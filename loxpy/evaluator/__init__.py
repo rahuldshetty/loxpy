@@ -137,6 +137,11 @@ class Interpreter(
     def visit_variable_expr(self, expr: expressions.Variable):
         return self.env.get(expr.name)
 
+    def visit_assign_expr(self, expr: expressions.Assign):
+        value = self.evaluate(expr.value)
+        self.env.assign(expr.name, value)
+        return value
+
     def check_number_operand(self, operator:Token, operand:object):
         if type(operand) == float:
             return

@@ -13,7 +13,7 @@ class Lox:
     hasRuntimeError = False
 
     def __init__(self):
-        pass
+        self.interpreter = Interpreter(self)
     
     @staticmethod
     def error(line, message):
@@ -36,12 +36,10 @@ class Lox:
         parser = Parser(tokens, self)
         statements = parser.parse()
 
-        interpreter = Interpreter(self)
-
         if self.hasError:
             return
         
-        interpreter.interpret(statements)
+        self.interpreter.interpret(statements)
 
         # print(AstPrinter().print(expression))
     
