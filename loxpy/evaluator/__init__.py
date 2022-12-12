@@ -188,6 +188,13 @@ class Interpreter(
                 return left
         return self.evaluate(expr.right)
 
+    def visit_call_expr(self, expr: expressions.Call):
+        callee = self.evaluate(expr.callee)
+        arguments = []
+        for argument in expr.arguments:
+            arguments.append(self.evaluate(argument))
+        return callee.call(self, arguments)
+
     def check_number_operand(self, operator:Token, operand:object):
         if type(operand) == float:
             return

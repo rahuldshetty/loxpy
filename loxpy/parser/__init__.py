@@ -266,7 +266,30 @@ class Parser:
             operator = self.previous()
             right = self.unary()
             return expressions.Unary(operator, right)
-        return self.primary()
+        return self.call()
+
+    def call(self):
+        expr = self.primary()
+        while True:
+            if self.match(TokenType.LEFT_PARAN):
+                expr = self.finish_call(expr)
+            else:
+                break
+        return expr
+    
+    def finish_call(self, callee: expressions.Expr):
+        arguments = []
+        if not self.check(TokenType.RIGHT_PAREN):
+            while True:
+                if len(arguments) >= 255:
+                    self.lox.error(self.peek(), "Can't have more than 255 arguments.")
+                arguments.append(
+                    self.expression()
+                )
+                if not self.match(TokenType.COMMA):
+                    break
+        paren = self.consume(TokenType.RIGHT_PAREN, "Expected ')' after arguments.")
+        return expressions.Call(callee, paren, arguments)
     
     def primary(self):
         if self.match(TokenType.FALSE):
