@@ -6,9 +6,16 @@ var second = 1;
 print first;
 print second;
 
+break;
+
 for (var n = 1; n <= fibo_numbers_to_print - 2; n = n + 1) {
     var third = first + second;
     print third;
     first = second;
     second = third;
+
+    if (n == 5){
+        print "Execution halted";
+        break;
+    }
 }

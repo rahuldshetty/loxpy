@@ -1,16 +1,9 @@
-
-var number = 9;
-
-if (number > 10){
-    print "Number is greater than 10";
-} else {
-    print "Number is less than 10";
-}
-
-number = 11;
-
-if (number > 10){
-    print "Number is greater than 10";
-} else {
-    print "Number is less than 10";
+var n = 1;
+while (n <= 10){
+    print n;
+    n = n + 1;
+    if (n == 5){
+        print "Execution halted";
+        break;
+    }
 }

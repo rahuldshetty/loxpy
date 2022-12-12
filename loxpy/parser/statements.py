@@ -9,6 +9,10 @@ class StmtVisitor(ABC):
           pass
 
      @abstractmethod
+     def visit_break_stmt(self, expr: 'Stmt'):
+          pass
+
+     @abstractmethod
      def visit_expression_stmt(self, expr: 'Stmt'):
           pass
 
@@ -41,6 +45,14 @@ class Block(Stmt):
 
      def accept(self, visitor: StmtVisitor):
           return visitor.visit_block_stmt(self)
+
+
+class Break(Stmt):
+     def __init__(self, token: Token):
+          self.token = token
+
+     def accept(self, visitor: StmtVisitor):
+          return visitor.visit_break_stmt(self)
 
 
 class Expression(Stmt):

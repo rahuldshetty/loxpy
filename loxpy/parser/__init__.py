@@ -63,6 +63,10 @@ class Parser:
         if self.match(TokenType.FOR):
             return self.for_statement()
 
+        # Break Statement
+        if self.match(TokenType.BREAK):
+            return self.break_statement()
+
         # If Statement
         if self.match(TokenType.IF):
             return self.if_statement()
@@ -144,6 +148,9 @@ class Parser:
 
         return body
 
+    def break_statement(self):
+        self.consume(TokenType.SEMICOLON, "Expected ';' after break statement.")
+        return statements.Break(self.previous())
 
     def block(self):
         statements = []

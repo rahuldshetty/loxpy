@@ -44,6 +44,7 @@ STATEMENTS_IMPORTS = DEFAULT_IMPORTS + (
 
 STATEMENTS = {
     "Block": ("statements: list",),
+    "Break": ("token: Token",),
     "Expression": ("expression: Expr",),
     "If": ( "condition: Expr", "thenBranch: Stmt", "elseBranch: Stmt" ),
     "Print": ("expression: Expr",),

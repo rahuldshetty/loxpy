@@ -5,7 +5,7 @@ from loxpy.token.token_types import TokenType
 
 from loxpy.environment import Environment
 
-from loxpy.evaluator.runtime_error import LoxPyRuntimeError, LoxPyDivisionByZeroError
+from loxpy.evaluator.runtime_error import LoxPyRuntimeError, LoxPyDivisionByZeroError, LoxBreakException
 
 class Interpreter(
     expressions.ExprVisitor,
@@ -18,7 +18,10 @@ class Interpreter(
     def interpret(self, statements):
         try:
             for statement in statements:
-                self.execute(statement)
+                try:
+                    self.execute(statement)
+                except LoxBreakException:
+                    pass
         except LoxPyRuntimeError as error:
             self.lox.runtime_error(error)
 
@@ -46,16 +49,22 @@ class Interpreter(
         return expr.accept(self)
 
     def is_truthy(self, object:object):
+        
         if object == None:
             return False
         if type(object) == bool:
             return object
-        if type(object) == expressions.Expr:
+
+        try:
             object = self.evaluate(object)
+        except:
+            pass
+        
         if type(object) == bool:
             return object
         elif type(object) == list or type(object)==str:
             return len(object) != 0
+                
         return object
     
     def is_equal(self, left, right):
@@ -161,8 +170,14 @@ class Interpreter(
         while self.is_truthy(
             self.evaluate(expr.condition)
         ):
-            self.execute(expr.body)
+            try:
+                self.execute(expr.body)
+            except LoxBreakException:
+                return
     
+    def visit_break_stmt(self, expr: statements.Break):
+        raise LoxBreakException(expr.token)
+
     def visit_logical_expr(self, expr: expressions.Logical):
         left = self.evaluate(expr.left)
         if expr.operator.type == TokenType.OR:

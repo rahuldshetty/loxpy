@@ -50,6 +50,7 @@ class TokenType(Enum):
     THIS = auto()
     VAR = auto()
     WHILE = auto()
+    BREAK = auto()
 
     EOF = auto()
 
@@ -76,6 +77,5 @@ KEYWORD_MAP = {
     "this": TokenType.THIS,
     "var": TokenType.VAR,
     "while": TokenType.WHILE,
-
-    
+    "break": TokenType.BREAK,
 }
