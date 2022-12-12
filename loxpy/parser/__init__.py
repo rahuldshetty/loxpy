@@ -59,6 +59,10 @@ class Parser:
             self.synchronize()
 
     def statement(self):
+        # For Statement
+        if self.match(TokenType.FOR):
+            return self.for_statement()
+
         # If Statement
         if self.match(TokenType.IF):
             return self.if_statement()
@@ -89,6 +93,56 @@ class Parser:
             elseBranch = self.statement()
         
         return statements.If(condition, thenBranch, elseBranch)
+
+
+    def for_statement(self):
+        '''
+        Desugaring, convert 'for' statement into 'while' to re-use existing statement.
+        '''
+        self.consume(TokenType.LEFT_PARAN, "Expected '(' after for statement.")
+        
+        # Initializer Expression
+        initializer = None
+        if self.match(TokenType.SEMICOLON):
+            initializer = None
+        elif self.match(TokenType.VAR):
+            initializer = self.var_declaration()
+        else:
+            initializer = self.expression_statement()
+        
+        # Condition Expression
+        condition = None
+        if not self.check(TokenType.SEMICOLON):
+            condition = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expected ';' after loop condition.")
+
+        # Increment Expression
+        increment = None
+        if not self.check(TokenType.RIGHT_PAREN):
+            increment = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expected ')' after increment clauses.")
+
+        # For loop body
+        body = self.statement()
+
+        # Prepare While Statement with initializer, condition and increment
+        if increment != None:
+            body = statements.Block([
+                body,
+                statements.Expression(increment)
+            ])
+
+        if condition == None:
+            condition = expressions.Literal(True)
+
+        body = statements.While(condition, body)
+
+        if initializer != None:
+            body = statements.Block([
+                initializer, body
+            ])
+
+        return body
 
 
     def block(self):
