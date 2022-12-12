@@ -50,7 +50,13 @@ class Interpreter(
             return False
         if type(object) == bool:
             return object
-        return self.evaluate(object)
+        if type(object) == expressions.Expr:
+            object = self.evaluate(object)
+        if type(object) == bool:
+            return object
+        elif type(object) == list or type(object)==str:
+            return len(object) != 0
+        return object
     
     def is_equal(self, left, right):
         if left == None and right == None:
@@ -150,6 +156,16 @@ class Interpreter(
         value = self.evaluate(expr.value)
         self.env.assign(expr.name, value)
         return value
+
+    def visit_logical_expr(self, expr: expressions.Logical):
+        left = self.evaluate(expr.left)
+        if expr.operator.type == TokenType.OR:
+            if self.is_truthy(left):
+                return left
+        elif expr.operator.type == TokenType.AND:
+            if not self.is_truthy(left):
+                return left
+        return self.evaluate(expr.right)
 
     def check_number_operand(self, operator:Token, operand:object):
         if type(operand) == float:
