@@ -66,6 +66,10 @@ class Parser:
         # Print Statement
         if self.match(TokenType.PRINT):
             return self.print_statement()
+        
+        # While Statement
+        if self.match(TokenType.WHILE):
+            return self.while_statement()
 
         # Block Statement
         if self.match(TokenType.LEFT_BRACE):
@@ -132,6 +136,13 @@ class Parser:
             raise self.error(equals, "Invalid assignment target.")
 
         return expr
+
+    def while_statement(self):
+        self.consume(TokenType.LEFT_PARAN, "Expected '(' after while statement.")
+        condition = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expected ')' after condition expression.")
+        body = self.statement()
+        return statements.While(condition, body)
 
     def logical_or(self):
         expr = self.logical_and()

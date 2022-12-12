@@ -157,6 +157,12 @@ class Interpreter(
         self.env.assign(expr.name, value)
         return value
 
+    def visit_while_stmt(self, expr: statements.While):
+        while self.is_truthy(
+            self.evaluate(expr.condition)
+        ):
+            self.execute(expr.body)
+    
     def visit_logical_expr(self, expr: expressions.Logical):
         left = self.evaluate(expr.left)
         if expr.operator.type == TokenType.OR:
