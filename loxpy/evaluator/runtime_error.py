@@ -1,4 +1,9 @@
 
+class LoxReturn(RuntimeError):
+    def __init__(self, value:object):
+        super().__init__("Return statement triggered.")
+        self.value = value
+
 class LoxBreakException(RuntimeError):
     def __init__(self, token):
         self.token = token

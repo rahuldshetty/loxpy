@@ -79,6 +79,10 @@ class Parser:
         # Print Statement
         if self.match(TokenType.PRINT):
             return self.print_statement()
+
+        # Return Statement
+        if self.match(TokenType.RETURN):
+            return self.return_statement()
         
         # While Statement
         if self.match(TokenType.WHILE):
@@ -176,6 +180,13 @@ class Parser:
         
         return statements.Function(name, params, body)
 
+    def return_statement(self):
+        keyword = self.previous()
+        value = None
+        if not self.check(TokenType.SEMICOLON):
+            value = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expected ';' after return value.")
+        return statements.Return(keyword, value)
 
     def break_statement(self):
         self.consume(TokenType.SEMICOLON, "Expected ';' after break statement.")

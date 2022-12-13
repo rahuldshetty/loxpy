@@ -8,7 +8,12 @@ from loxpy.environment import Environment
 from loxpy.evaluator.lox_callable import LoxCallable
 from loxpy.evaluator.lox_function import LoxFunction
 
-from loxpy.evaluator.runtime_error import LoxPyRuntimeError, LoxPyDivisionByZeroError, LoxBreakException
+from loxpy.evaluator.runtime_error import (
+    LoxPyRuntimeError, 
+    LoxPyDivisionByZeroError, 
+    LoxBreakException,
+    LoxReturn
+)
 
 
 from loxpy.evaluator.native_functions import (
@@ -205,7 +210,9 @@ class Interpreter(
         callee = self.evaluate(expr.callee)
         if not isinstance(callee, LoxCallable):
             raise LoxPyRuntimeError(expr.paren, "Can only call function and classes.")
+        
         arguments = []
+        
         for argument in expr.arguments:
             arguments.append(self.evaluate(argument))
 
@@ -222,6 +229,12 @@ class Interpreter(
         self.env.define(
             stmt.name.lexeme, fn
         )
+    
+    def visit_return_stmt(self, expr: statements.Return):
+        value = None
+        if expr.value != None:
+            value = self.evaluate(expr.value)
+        raise LoxReturn(value)
 
     def check_number_operand(self, operator:Token, operand:object):
         if type(operand) == float:
