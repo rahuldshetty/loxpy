@@ -47,7 +47,7 @@ class Interpreter(
         statement.accept(self)
 
     def stringify(self, value):
-        if object == None:
+        if value == None:
             return "null"
         
         if type(value) == float:
@@ -225,7 +225,7 @@ class Interpreter(
         return callee.call(self, arguments)
     
     def visit_function_stmt(self, stmt: statements.Function):
-        fn = LoxFunction(stmt)
+        fn = LoxFunction(stmt, self.env)
         self.env.define(
             stmt.name.lexeme, fn
         )

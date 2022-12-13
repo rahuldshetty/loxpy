@@ -1,17 +1,23 @@
 from loxpy.evaluator.lox_callable import LoxCallable
 from loxpy.parser import statements
+from loxpy.environment import Environment
 
 from loxpy.evaluator.runtime_error import LoxReturn
 
 from copy import deepcopy
 
 class LoxFunction(LoxCallable):
-    def __init__(self, declaration:statements.Function):
+    def __init__(self, 
+        declaration:statements.Function,
+        closure:Environment
+    ):
         super().__init__()
         self.declaration = declaration
+        self.closure = deepcopy(closure)
 
     def call(self, interpreter, arguments:list):
-        env = deepcopy(interpreter.global_env)
+        env = self.closure
+
         for i in range(0, len(self.declaration.params), 1):
             arg = self.declaration.params[i]
             env.define(
