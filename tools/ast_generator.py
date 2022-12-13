@@ -47,6 +47,7 @@ STATEMENTS = {
     "Block": ("statements: list",),
     "Break": ("token: Token",),
     "Expression": ("expression: Expr",),
+    "Function": ("name: Token", "params: list", "body: list"),
     "If": ( "condition: Expr", "thenBranch: Stmt", "elseBranch: Stmt" ),
     "Print": ("expression: Expr",),
     "Var": ("name: Token", "initializer: Expr"),

@@ -52,6 +52,11 @@ class Parser:
     
     def declaration(self):
         try:
+            # Function declaration
+            if self.match(TokenType.FUNCTION):
+                return self.function("function")
+
+            # Var declaration
             if self.match(TokenType.VAR):
                 return self.var_declaration()
             return self.statement()
@@ -147,6 +152,30 @@ class Parser:
             ])
 
         return body
+
+    def function(self, kind:str):
+        name = self.consume(TokenType.IDENTIFIER, "Expected " + kind + " name.")
+
+        self.consume(TokenType.LEFT_PARAN, "Expected '(' after " + kind + " name.")
+        
+        params = []
+        if not self.check(TokenType.RIGHT_PAREN):
+            while True:
+                if len(params) >= 255:
+                    self.error(self.peek(), "Can't have more than 255 parameters.")
+                params.append(
+                    self.consume(TokenType.IDENTIFIER, "Expected parameter name.")
+                )
+
+                if not self.match(TokenType.COMMA):
+                    break
+        self.consume(TokenType.RIGHT_PAREN, "Expected ')' after parameters.")
+
+        self.consume(TokenType.LEFT_BRACE, "Expected '{' before " + kind + " body.")
+        body = self.block()
+        
+        return statements.Function(name, params, body)
+
 
     def break_statement(self):
         self.consume(TokenType.SEMICOLON, "Expected ';' after break statement.")

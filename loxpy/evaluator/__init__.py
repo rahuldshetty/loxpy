@@ -5,7 +5,15 @@ from loxpy.token.token_types import TokenType
 
 from loxpy.environment import Environment
 
+from loxpy.evaluator.lox_callable import LoxCallable
+from loxpy.evaluator.lox_function import LoxFunction
+
 from loxpy.evaluator.runtime_error import LoxPyRuntimeError, LoxPyDivisionByZeroError, LoxBreakException
+
+
+from loxpy.evaluator.native_functions import (
+    Clock
+)
 
 class Interpreter(
     expressions.ExprVisitor,
@@ -13,7 +21,12 @@ class Interpreter(
 ):
     def __init__(self, lox_main):
         self.lox = lox_main
-        self.env = Environment()
+        self.global_env = Environment()
+        self.env = self.global_env
+
+        self.global_env.define(
+            "clock", Clock()
+        )
 
     def interpret(self, statements):
         try:
@@ -190,10 +203,25 @@ class Interpreter(
 
     def visit_call_expr(self, expr: expressions.Call):
         callee = self.evaluate(expr.callee)
+        if not isinstance(callee, LoxCallable):
+            raise LoxPyRuntimeError(expr.paren, "Can only call function and classes.")
         arguments = []
         for argument in expr.arguments:
             arguments.append(self.evaluate(argument))
+
+        if len(arguments) != callee.arity():
+            raise LoxPyRuntimeError(expr.paren, "Expected " +
+                str(callee.arity()) + " arguments but got " +
+                str(len(arguments)) + "."
+            )
+        
         return callee.call(self, arguments)
+    
+    def visit_function_stmt(self, stmt: statements.Function):
+        fn = LoxFunction(stmt)
+        self.env.define(
+            stmt.name.lexeme, fn
+        )
 
     def check_number_operand(self, operator:Token, operand:object):
         if type(operand) == float:
