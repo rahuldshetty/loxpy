@@ -8,6 +8,7 @@ from loxpy.environment import Environment
 from loxpy.evaluator.lox_class import LoxClass
 from loxpy.evaluator.lox_callable import LoxCallable
 from loxpy.evaluator.lox_function import LoxFunction
+from loxpy.evaluator.lox_instance import LoxInstance
 
 from loxpy.evaluator.runtime_error import (
     LoxPyRuntimeError, 
@@ -233,6 +234,23 @@ class Interpreter(
             )
         
         return callee.call(self, arguments)
+    
+    def visit_dot_expr(self, expr: expressions.Dot):
+        obj = self.evaluate(expr.object)
+        if isinstance(obj, LoxInstance):
+            return obj.get(expr.name)
+        raise LoxPyRuntimeError(expr.name, "Only instances have properties.")
+    
+    def visit_dotset_expr(self, expr: expressions.DotSet):
+        obj = self.evaluate(expr.object)
+
+        if not isinstance(obj, LoxInstance):
+            raise LoxPyRuntimeError(expr.name, "Only instances have fields.")
+        
+        value = self.evaluate(expr.value)
+        obj.set(expr.name, value)
+        return value
+
     
     def visit_function_stmt(self, stmt: statements.Function):
         fn = LoxFunction(stmt, self.env)

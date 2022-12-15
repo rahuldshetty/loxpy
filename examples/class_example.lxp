@@ -5,3 +5,7 @@ print Bagel;
 var bagel = Bagel();
 
 print bagel; 
+
+bagel.eat = true;
+
+print bagel.eat;

@@ -248,8 +248,12 @@ class Parser:
             value = self.assignment()
 
             if type(expr) == expressions.Variable:
+                # Variable assignment
                 name = expr.name
                 return expressions.Assign(name, value)
+            elif isinstance(expr, expressions.Dot):
+                # Class instance dot set operator
+                return expressions.DotSet(expr.object, expr.name, value)
             
             raise self.error(equals, "Invalid assignment target.")
 
@@ -330,6 +334,9 @@ class Parser:
         while True:
             if self.match(TokenType.LEFT_PARAN):
                 expr = self.finish_call(expr)
+            elif self.match(TokenType.DOT):
+                name = self.consume(TokenType.IDENTIFIER, "Expected property name after dot operator.")
+                expr = expressions.Dot(expr, name)
             else:
                 break
         return expr

@@ -21,6 +21,10 @@ class ExprVisitor(ABC):
           pass
 
      @abstractmethod
+     def visit_dotset_expr(self, expr: 'Expr'):
+          pass
+
+     @abstractmethod
      def visit_grouping_expr(self, expr: 'Expr'):
           pass
 
@@ -83,6 +87,16 @@ class Dot(Expr):
 
      def accept(self, visitor: ExprVisitor):
           return visitor.visit_dot_expr(self)
+
+
+class DotSet(Expr):
+     def __init__(self, object: Expr,name: Token,value: Expr):
+          self.object = object
+          self.name = name
+          self.value = value
+
+     def accept(self, visitor: ExprVisitor):
+          return visitor.visit_dotset_expr(self)
 
 
 class Grouping(Expr):

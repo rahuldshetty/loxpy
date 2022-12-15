@@ -30,6 +30,7 @@ EXPRESSIONS = {
     "Binary": ('left: Expr', 'operator: Token', 'right: Expr'),
     "Call": ("callee: Expr", "paren: Token", "arguments: list"),
     "Dot": ("object: Expr", "name: Token"),
+    "DotSet": ("object: Expr", "name: Token", "value: Expr"),
     "Grouping": ('expression: Expr',),
     "Literal": ('value: object',),
     "Logical": ('left: Expr', 'operator: Token', 'right: Expr'),
