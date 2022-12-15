@@ -29,6 +29,7 @@ EXPRESSIONS = {
     "Assign": ("name: Token", "value: Expr"),
     "Binary": ('left: Expr', 'operator: Token', 'right: Expr'),
     "Call": ("callee: Expr", "paren: Token", "arguments: list"),
+    "Dot": ("object: Expr", "name: Token"),
     "Grouping": ('expression: Expr',),
     "Literal": ('value: object',),
     "Logical": ('left: Expr', 'operator: Token', 'right: Expr'),
@@ -45,6 +46,7 @@ STATEMENTS_IMPORTS = DEFAULT_IMPORTS + (
 
 STATEMENTS = {
     "Block": ("statements: list",),
+    "Class": ("name: Token", "methods: list"),
     "Break": ("token: Token",),
     "Expression": ("expression: Expr",),
     "Function": ("name: Token", "params: list", "body: list"),

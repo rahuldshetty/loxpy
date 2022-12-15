@@ -52,6 +52,10 @@ class Parser:
     
     def declaration(self):
         try:
+            # Class Declaration
+            if self.match(TokenType.CLASS):
+                return self.class_declaraction()
+
             # Function declaration
             if self.match(TokenType.FUNCTION):
                 return self.function("function")
@@ -199,6 +203,19 @@ class Parser:
         
         self.consume(TokenType.RIGHT_BRACE, "Expected '}' after block.")
         return statements
+
+    def class_declaraction(self):
+        name = self.consume(TokenType.IDENTIFIER, "Expected class name.")
+        self.consume(TokenType.LEFT_BRACE, "Expected '{' before class body.")
+
+        methods = []
+        while not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end():
+            methods.append(self.function("method"))
+        
+        self.consume(TokenType.RIGHT_BRACE, "Expected '}' after class body.")
+        
+        return statements.Class(name, methods)
+
 
     def var_declaration(self):
         name = self.consume(TokenType.IDENTIFIER, "Expected variable name.")

@@ -5,6 +5,7 @@ from loxpy.token.token_types import TokenType
 
 from loxpy.environment import Environment
 
+from loxpy.evaluator.lox_class import LoxClass
 from loxpy.evaluator.lox_callable import LoxCallable
 from loxpy.evaluator.lox_function import LoxFunction
 
@@ -169,6 +170,15 @@ class Interpreter(
         value = self.evaluate(expr.expression)
         print(self.stringify(value))
         return None
+
+    def visit_class_stmt(self, expr: statements.Class):
+        self.env.define(
+            expr.name.lexeme, None
+        )
+        loxklass = LoxClass(expr.name.lexeme)
+        self.env.assign(
+            expr.name, loxklass
+        ) 
 
     def visit_var_stmt(self, stmt: statements.Var):
         value = None

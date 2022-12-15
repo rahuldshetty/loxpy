@@ -9,6 +9,10 @@ class StmtVisitor(ABC):
           pass
 
      @abstractmethod
+     def visit_class_stmt(self, expr: 'Stmt'):
+          pass
+
+     @abstractmethod
      def visit_break_stmt(self, expr: 'Stmt'):
           pass
 
@@ -53,6 +57,15 @@ class Block(Stmt):
 
      def accept(self, visitor: StmtVisitor):
           return visitor.visit_block_stmt(self)
+
+
+class Class(Stmt):
+     def __init__(self, name: Token,methods: list):
+          self.name = name
+          self.methods = methods
+
+     def accept(self, visitor: StmtVisitor):
+          return visitor.visit_class_stmt(self)
 
 
 class Break(Stmt):
