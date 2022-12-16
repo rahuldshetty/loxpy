@@ -176,7 +176,16 @@ class Interpreter(
         self.env.define(
             expr.name.lexeme, None
         )
-        loxklass = LoxClass(expr.name.lexeme)
+
+        methods = {}
+        for method in expr.methods:
+            funct = LoxFunction(
+                method,
+                self.env
+            )
+            methods[method.name.lexeme] = funct
+
+        loxklass = LoxClass(expr.name.lexeme, methods)
         self.env.assign(
             expr.name, loxklass
         ) 

@@ -4,8 +4,9 @@ from loxpy.evaluator.lox_callable import LoxCallable
 
 class LoxClass(LoxCallable):
 
-    def __init__(self, name):
+    def __init__(self, name, methods:list):
         self.name = name
+        self.methods = methods
     
     def __str__(self):
         return self.name
@@ -16,3 +17,7 @@ class LoxClass(LoxCallable):
 
     def arity(self):
         return 0
+    
+    def find_method(self, name):
+        if name in self.methods:
+            return self.methods[name]

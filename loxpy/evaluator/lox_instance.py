@@ -17,6 +17,11 @@ class LoxInstance:
     def get(self, name: Token):
         if name.lexeme in self.fields:
             return self.fields[name.lexeme]
+
+        method = self.kclass.find_method(name.lexeme)
+        if method != None:
+            return method
+
         raise LoxPyRuntimeError(name, "Undefined property '" + name.lexeme + "'.")
     
     def set(self, name: Token, value:object):
