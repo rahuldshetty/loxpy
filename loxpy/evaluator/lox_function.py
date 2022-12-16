@@ -9,11 +9,16 @@ from copy import deepcopy
 class LoxFunction(LoxCallable):
     def __init__(self, 
         declaration:statements.Function,
-        closure:Environment
+        closure:Environment,
+        inside_class=False
     ):
         super().__init__()
         self.declaration = declaration
-        self.closure = deepcopy(closure)
+        if inside_class:
+            # Refer to parent closure
+            self.closure = closure
+        else:
+            self.closure = deepcopy(closure)
 
     def call(self, interpreter, arguments:list):
         env = self.closure
@@ -36,3 +41,8 @@ class LoxFunction(LoxCallable):
 
     def __str__(self):
         return f"<fn {self.declaration.name.lexeme}>"
+
+    def bind(self, instance):
+        env = Environment(self.closure)
+        env.define("this", instance)
+        return LoxFunction(self.declaration, env, True)

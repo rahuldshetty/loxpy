@@ -1,7 +1,20 @@
-class Bacon {
-  fn eat() {
-    print "Crunch crunch crunch!";
+class Circle{
+  fn set_radius(val){
+    this.radius = val;
+  }
+
+  fn get_radius(){
+    return this.radius;
+  }
+
+  fn area(){
+    return this.radius * this.radius * 3.14; 
   }
 }
 
-Bacon().eat();
+var c1 = Circle();
+
+c1.set_radius(2);
+
+print c1.get_radius();
+print c1.area();

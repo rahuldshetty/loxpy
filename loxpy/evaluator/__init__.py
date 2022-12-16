@@ -10,6 +10,8 @@ from loxpy.evaluator.lox_callable import LoxCallable
 from loxpy.evaluator.lox_function import LoxFunction
 from loxpy.evaluator.lox_instance import LoxInstance
 
+from copy import deepcopy
+
 from loxpy.evaluator.runtime_error import (
     LoxPyRuntimeError, 
     LoxPyDivisionByZeroError, 
@@ -260,6 +262,8 @@ class Interpreter(
         obj.set(expr.name, value)
         return value
 
+    def visit_this_expr(self, expr: expressions.This):
+        return self.env.get(expr.keyword)
     
     def visit_function_stmt(self, stmt: statements.Function):
         fn = LoxFunction(stmt, self.env)

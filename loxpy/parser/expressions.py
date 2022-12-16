@@ -37,6 +37,10 @@ class ExprVisitor(ABC):
           pass
 
      @abstractmethod
+     def visit_this_expr(self, expr: 'Expr'):
+          pass
+
+     @abstractmethod
      def visit_unary_expr(self, expr: 'Expr'):
           pass
 
@@ -123,6 +127,14 @@ class Logical(Expr):
 
      def accept(self, visitor: ExprVisitor):
           return visitor.visit_logical_expr(self)
+
+
+class This(Expr):
+     def __init__(self, keyword: Token):
+          self.keyword = keyword
+
+     def accept(self, visitor: ExprVisitor):
+          return visitor.visit_this_expr(self)
 
 
 class Unary(Expr):

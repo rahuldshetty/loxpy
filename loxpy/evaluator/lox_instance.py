@@ -20,7 +20,7 @@ class LoxInstance:
 
         method = self.kclass.find_method(name.lexeme)
         if method != None:
-            return method
+            return method.bind(self)
 
         raise LoxPyRuntimeError(name, "Undefined property '" + name.lexeme + "'.")
     

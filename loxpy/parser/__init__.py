@@ -212,8 +212,6 @@ class Parser:
         while not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end():
             self.consume(TokenType.FUNCTION, "Expected method declaraction.")
             methods.append(self.function("method"))
-            
-
         
         self.consume(TokenType.RIGHT_BRACE, "Expected '}' after class body.")
         
@@ -368,6 +366,9 @@ class Parser:
         
         if self.match(TokenType.NUMBER, TokenType.STRING):
             return expressions.Literal(self.previous().literal)
+        
+        if self.match(TokenType.THIS):
+            return expressions.This(self.previous())
 
         if self.match(TokenType.IDENTIFIER):
             return expressions.Variable(self.previous())
