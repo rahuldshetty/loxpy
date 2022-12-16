@@ -210,7 +210,10 @@ class Parser:
 
         methods = []
         while not self.check(TokenType.RIGHT_BRACE) and not self.is_at_end():
+            self.consume(TokenType.FUNCTION, "Expected method declaraction.")
             methods.append(self.function("method"))
+            
+
         
         self.consume(TokenType.RIGHT_BRACE, "Expected '}' after class body.")
         
