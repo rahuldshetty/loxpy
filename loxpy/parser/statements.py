@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from loxpy.parser.expressions import Expr
+from loxpy.parser.expressions import Expr, Variable
 from loxpy.token import Token
 
 
@@ -60,8 +60,9 @@ class Block(Stmt):
 
 
 class Class(Stmt):
-     def __init__(self, name: Token,methods: list):
+     def __init__(self, name: Token,superclass: Variable,methods: list):
           self.name = name
+          self.superclass = superclass
           self.methods = methods
 
      def accept(self, visitor: StmtVisitor):

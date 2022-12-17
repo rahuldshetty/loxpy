@@ -4,10 +4,11 @@ from loxpy.evaluator.lox_callable import LoxCallable
 
 class LoxClass(LoxCallable, LoxInstance):
 
-    def __init__(self, name, methods:list):
+    def __init__(self, name, superclass:'LoxClass', methods:list):
         super().__init__(self)
         self.name = name
         self.methods = methods
+        self.superclass = superclass
     
     def __str__(self):
         return self.name
@@ -30,3 +31,6 @@ class LoxClass(LoxCallable, LoxInstance):
     def find_method(self, name):
         if name in self.methods:
             return self.methods[name]
+        
+        if self.superclass != None:
+            return self.superclass.find_method(name)

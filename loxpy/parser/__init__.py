@@ -206,6 +206,13 @@ class Parser:
 
     def class_declaraction(self):
         name = self.consume(TokenType.IDENTIFIER, "Expected class name.")
+
+        superclass = None
+        if self.match(TokenType.LEFT_PARAN):
+            self.consume(TokenType.IDENTIFIER, "Expected superclass name for inheritence.")
+            superclass =  expressions.Variable(self.previous())
+            self.consume(TokenType.RIGHT_PAREN, "Expected ')' after super class name.")
+
         self.consume(TokenType.LEFT_BRACE, "Expected '{' before class body.")
 
         methods = []
@@ -214,8 +221,11 @@ class Parser:
             methods.append(self.function("method"))
         
         self.consume(TokenType.RIGHT_BRACE, "Expected '}' after class body.")
+
+        if superclass != None and name.lexeme == superclass.name.lexeme:
+            self.error(name, "A class cannot inherit itself.")
         
-        return statements.Class(name, methods)
+        return statements.Class(name, superclass, methods)
 
 
     def var_declaration(self):

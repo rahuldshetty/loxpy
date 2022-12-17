@@ -42,13 +42,13 @@ EXPRESSIONS = {
 # Statement Import
 
 STATEMENTS_IMPORTS = DEFAULT_IMPORTS + (
-    'from loxpy.parser.expressions import Expr',
+    'from loxpy.parser.expressions import Expr, Variable',
     'from loxpy.token import Token',
 )
 
 STATEMENTS = {
     "Block": ("statements: list",),
-    "Class": ("name: Token", "methods: list"),
+    "Class": ("name: Token", "superclass: Variable", "methods: list"),
     "Break": ("token: Token",),
     "Expression": ("expression: Expr",),
     "Function": ("name: Token", "params: list", "body: list"),

@@ -175,6 +175,12 @@ class Interpreter(
         return None
 
     def visit_class_stmt(self, expr: statements.Class):
+        superclass = None
+        if expr.superclass != None:
+            superclass = self.evaluate(expr.superclass)
+            if not isinstance(superclass, LoxClass):
+                raise LoxPyRuntimeError(expr.superclass.name, "Superclass must be a class.")
+
         self.env.define(
             expr.name.lexeme, None
         )
@@ -189,7 +195,7 @@ class Interpreter(
             )
             methods[method.name.lexeme] = funct
 
-        loxklass = LoxClass(expr.name.lexeme, methods)
+        loxklass = LoxClass(expr.name.lexeme, superclass, methods)
         self.env.assign(
             expr.name, loxklass
         ) 
