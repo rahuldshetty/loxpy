@@ -185,6 +185,10 @@ class Interpreter(
             expr.name.lexeme, None
         )
 
+        if expr.superclass != None:
+            self.env = Environment(self.env)
+            self.env.define("super", superclass)
+
         methods = {}
         for method in expr.methods:
             funct = LoxFunction(
@@ -196,9 +200,23 @@ class Interpreter(
             methods[method.name.lexeme] = funct
 
         loxklass = LoxClass(expr.name.lexeme, superclass, methods)
+
+        if superclass != None:
+            self.env = self.env.enclosing
+
         self.env.assign(
             expr.name, loxklass
         ) 
+
+    def visit_super_expr(self, expr: expressions.Super):
+        superclass = self.env.get(Token(None, "super", "super", -1))
+        currentclass = self.env.get(Token(None, "this", "this", -1))
+        method = superclass.find_method(expr.method.lexeme)
+
+        if method == None:
+            raise LoxPyRuntimeError(expr.method, "Undefined property '" + expr.method.lexeme + "'.")
+
+        return method.bind(currentclass)
 
     def visit_var_stmt(self, stmt: statements.Var):
         value = None

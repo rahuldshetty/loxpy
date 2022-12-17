@@ -34,6 +34,7 @@ EXPRESSIONS = {
     "Grouping": ('expression: Expr',),
     "Literal": ('value: object',),
     "Logical": ('left: Expr', 'operator: Token', 'right: Expr'),
+    "Super": ("keyword: Token", "method: Token"),
     "This": ("keyword: Token",),
     "Unary": ('operator: Token', 'right: Expr'),
     "Variable": ("name: Token",),
