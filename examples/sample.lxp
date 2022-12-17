@@ -1,0 +1,41 @@
+print "Functions";
+fn hello(name){
+    print "Hello " + name;
+}
+
+hello("World!"); 
+
+print "Operators";
+var a = 10;
+var b = 20;
+
+print a+b;
+print a-b;
+print a*b;
+print b / a;
+
+
+print "For Loop";
+for(var i = 1; i <= 10; i = i + 1){
+    print i;
+    if (i == 5){
+        break;
+    }
+}
+
+
+print "Class & Objects";
+class Doughnut {
+  fn cook() {
+    print "Fry until golden brown.";
+  }
+}
+
+class BostonCream (Doughnut) {
+  fn cook() {
+    super.cook();
+    print "Pipe full of custard and coat with chocolate.";
+  }
+}
+
+BostonCream().cook();
