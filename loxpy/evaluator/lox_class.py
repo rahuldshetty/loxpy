@@ -2,9 +2,10 @@ from loxpy.evaluator.lox_instance import LoxInstance
 from loxpy.evaluator.lox_callable import LoxCallable
 
 
-class LoxClass(LoxCallable):
+class LoxClass(LoxCallable, LoxInstance):
 
     def __init__(self, name, methods:list):
+        super().__init__(self)
         self.name = name
         self.methods = methods
     

@@ -1,0 +1,7 @@
+class Math{
+    fn square(number){
+        return number * number;
+    }
+}
+
+print Math.square(2);
