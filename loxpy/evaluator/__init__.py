@@ -183,7 +183,9 @@ class Interpreter(
         for method in expr.methods:
             funct = LoxFunction(
                 method,
-                self.env
+                self.env,
+                True,
+                method.name == "init"
             )
             methods[method.name.lexeme] = funct
 

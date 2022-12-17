@@ -10,10 +10,12 @@ class LoxFunction(LoxCallable):
     def __init__(self, 
         declaration:statements.Function,
         closure:Environment,
-        inside_class=False
+        inside_class=False,
+        is_initializer=False
     ):
         super().__init__()
         self.declaration = declaration
+        self.is_initializer = is_initializer
         if inside_class:
             # Refer to parent closure
             self.closure = closure
@@ -32,7 +34,13 @@ class LoxFunction(LoxCallable):
         try:
             interpreter.execute_block(self.declaration.body, env)
         except LoxReturn as return_obj:
-            return return_obj.value
+            if self.is_initializer:
+                return self.closure.get("this")
+
+            return return_obj.value 
+
+        if self.is_initializer:
+            return self.closure.get("this")
         
         return None
 
@@ -45,4 +53,4 @@ class LoxFunction(LoxCallable):
     def bind(self, instance):
         env = Environment(self.closure)
         env.define("this", instance)
-        return LoxFunction(self.declaration, env, True)
+        return LoxFunction(self.declaration, env, True, self.is_initializer)

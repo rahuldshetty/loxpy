@@ -1,4 +1,9 @@
 class Circle{
+  fn init(radius){
+    this.set_radius(radius);
+    return;
+  }
+
   fn set_radius(val){
     this.radius = val;
   }
@@ -12,9 +17,12 @@ class Circle{
   }
 }
 
-var c1 = Circle();
+var c1 = Circle(2);
 
-c1.set_radius(2);
+print c1.get_radius();
+print c1.area();
+
+c1.set_radius(1);
 
 print c1.get_radius();
 print c1.area();
